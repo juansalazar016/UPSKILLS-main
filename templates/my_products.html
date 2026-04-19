@@ -1,78 +1,8 @@
 {% extends "base.html" %}
 
+{% block styles %}<link rel="stylesheet" href="/static/css/my_products.css">{% endblock %}
+
 {% block content %}
-<style>
-    .pagination {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 40px;
-        flex-wrap: wrap;
-    }
-    .page-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 38px;
-        height: 38px;
-        padding: 0 12px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        text-decoration: none;
-        border: 1px solid var(--color-border);
-        background: var(--color-white);
-        color: var(--color-purple-main);
-        transition: all 0.2s;
-    }
-    .page-btn:hover { background: var(--color-purple-soft); border-color: var(--color-purple-main); }
-    .page-btn.active { background: var(--color-purple-main); color: white; border-color: var(--color-purple-main); }
-    .page-btn.disabled { opacity: 0.4; pointer-events: none; }
-
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        color: var(--color-text-muted);
-    }
-    .empty-state-icon { font-size: 56px; margin-bottom: 16px; }
-    .empty-state-title { font-size: 20px; font-weight: 700; color: var(--color-purple-dark); margin-bottom: 8px; }
-    .empty-state-desc { font-size: 15px; margin-bottom: 24px; }
-    .empty-state-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 12px 24px;
-        background: linear-gradient(135deg, var(--color-purple-main), var(--color-purple-dark));
-        color: white;
-        text-decoration: none;
-        border-radius: 12px;
-        font-weight: 700;
-        font-size: 15px;
-        box-shadow: 0 4px 15px rgba(124,58,237,0.3);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .empty-state-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,0.4); }
-
-    .mp-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 24px;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-    .mp-header h2 { margin-bottom: 0; text-align: left; }
-    .mp-count {
-        font-size: 14px;
-        color: var(--color-text-muted);
-        background: var(--color-purple-soft);
-        padding: 6px 14px;
-        border-radius: 50px;
-        font-weight: 600;
-    }
-    .mp-count strong { color: var(--color-purple-main); }
-</style>
 
 <div class="container">
     <nav style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--color-text-muted);margin-bottom:28px;">
@@ -90,10 +20,10 @@
 
     {% if products_with_ratings %}
     <div class="product-grid" id="product-list">
-        {% for product, rating_count in products_with_ratings %}
+        {% for product, rating_count, avg_rating in products_with_ratings %}
         <a href="/product/{{ product.id }}" class="product-card product-item">
             <div class="pc-image-frame">
-                <img src="/static/images/{{ product.image.split(',')[0].strip() }}" alt="{{ product.name }}">
+                <img src="/static/images/{{ product.image.split(',')[0].strip() }}" alt="{{ product.name }}" loading="lazy">
                 <div class="pc-image-overlay">
                     <span class="pc-view-btn">VER DETALLES</span>
                 </div>
@@ -108,7 +38,17 @@
                         <span class="pc-badge pc-badge-out">✗ Sin stock</span>
                     {% endif %}
                 </div>
-                <div class="pc-rating">💖 {{ rating_count }} puntuaciones</div>
+                <div class="pc-rating">
+                    {% if rating_count > 0 %}
+                        <span style="color:#f59e0b;letter-spacing:1px;">
+                            {% for i in range(1,6) %}{{ '★' if avg_rating >= i else '☆' }}{% endfor %}
+                        </span>
+                        <span style="font-weight:700;color:var(--color-purple-dark);">{{ avg_rating }}</span>
+                        <span style="color:var(--color-text-muted);font-size:12px;">({{ rating_count }})</span>
+                    {% else %}
+                        <span style="color:var(--color-text-muted);font-size:13px;">Sin calificaciones aún</span>
+                    {% endif %}
+                </div>
             </div>
         </a>
         {% endfor %}

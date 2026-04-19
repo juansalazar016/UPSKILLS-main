@@ -1,0 +1,378 @@
+================================================================================
+  IA_EDITS.TXT — Historial completo de cambios aplicados con Claude Sonnet 4.6
+  Proyecto: UPSKILLS (RSmiTienda) | Fecha: Abril 2026
+================================================================================
+
+CONTEXTO DEL PROYECTO
+----------------------
+Aplicación de tienda en línea construida con:
+  - Backend:   FastAPI + SQLAlchemy (ORM)
+  - Base de datos: PostgreSQL (migrado desde SQLite durante esta sesión)
+  - Frontend:  Jinja2 Templates + CSS puro (sin frameworks)
+  - Auth:      Sesiones en memoria con passlib bcrypt
+
+El proyecto tiene 3 módulos principales:
+  1. Usuarios (users) — CRUD completo
+  2. Productos (products) — CRUD completo
+  3. Valoraciones (ratings) — Create + Read
+
+
+================================================================================
+BLOQUE 1 — MIGRACIÓN SQLite → PostgreSQL
+================================================================================
+
+Archivos modificados: database.py, requirements.txt
+
+- Se reemplazó la URL de conexión SQLite por PostgreSQL:
+    postgresql://postgres:Superduper69@localhost:5432/UpSkillss_db?client_encoding=utf8
+- Se eliminó connect_args={"check_same_thread": False} (exclusivo de SQLite)
+- Se instaló y agregó psycopg2-binary como driver de PostgreSQL
+- Se añadió ?client_encoding=utf8 para resolver UnicodeDecodeError en Windows
+  (problema conocido: PostgreSQL devuelve errores en español con encoding Latin-1
+   y psycopg2 falla al decodificarlos como UTF-8)
+- La base de datos UpSkillss_db se creó manualmente en pgAdmin 4
+
+
+================================================================================
+BLOQUE 2 — REDISEÑO DE TARJETAS DE PRODUCTOS (index.html)
+================================================================================
+
+Archivos modificados: static/css/styles.css, templates/index.html
+
+- Toda la card ahora es un <a> clickeable directo al producto
+- Imagen con aspect-ratio 4/3 y zoom suave al hover (scale 1.06)
+- Overlay con gradiente morado al hover con texto "VER DETALLES"
+- Precio prominente en color morado principal
+- Badges: stock (verde/rojo), autor (morado suave)
+- Acento superior morado (border-top: 4px)
+- Rating separado con línea divisora al fondo
+- Se corrigió problema de subrayado heredado del tag <a>
+
+
+================================================================================
+BLOQUE 3 — FORMATO DE PRECIOS
+================================================================================
+
+Archivos modificados: main.py, templates/index.html, templates/product_detail.html
+
+- Se creó filtro Jinja2 personalizado "price" en main.py:
+    def format_price(value): return "{:,.0f}".format(value).replace(",", ".")
+    templates.env.filters["price"] = format_price
+- Convierte 290000.0 → $290.000 (formato colombiano con puntos de miles)
+- Aplicado en index.html y product_detail.html con {{ product.price | price }}
+
+
+================================================================================
+BLOQUE 4 — CRUD COMPLETO DE USUARIOS
+================================================================================
+
+Archivos modificados: models.py, main.py
+Archivos creados: templates/edit_profile.html
+
+MODELS.PY:
+- Se agregó cascade="all, delete-orphan" en User.products, User.ratings
+  y Product.ratings para que al eliminar un usuario se eliminen en cadena
+  todos sus productos y las valoraciones asociadas
+
+MAIN.PY — Nuevas rutas:
+  GET  /edit_profile  → muestra formulario con datos actuales del usuario
+  POST /edit_profile  → valida contraseña actual, actualiza campos,
+                        permite cambio opcional de contraseña
+  POST /delete_account → valida contraseña, elimina usuario (cascada),
+                         limpia sesión y redirige al inicio
+
+EDIT_PROFILE.HTML:
+- Layout de dos columnas: sidebar (avatar, nombre, email, contador productos)
+  + panel de formulario
+- Sección 1: información personal (username, email, whatsapp)
+- Sección 2: cambio de contraseña opcional (solo si se llenan los campos)
+- Sección 3: confirmación con contraseña actual (requerida para cualquier cambio)
+- Zona de peligro: eliminar cuenta con confirmación de contraseña
+
+
+================================================================================
+BLOQUE 5 — REDISEÑO DEL HEADER (base.html)
+================================================================================
+
+Archivos modificados: templates/base.html, static/css/styles.css
+
+- Estructura dividida en .header-left (logo + bienvenido) y nav (botones)
+- "👋 username" aparece al lado del logo con separador vertical sutil
+- Botones de navegación con estilo pill (fondo semi-transparente, borde suave)
+- .nav-btn para acciones principales, .nav-btn-outline para "Salir"
+- Se agregó enlace "👤 Perfil" en el nav (solo visible con sesión activa)
+
+
+================================================================================
+BLOQUE 6 — MÚLTIPLES IMÁGENES + CAMPO LINK EN PRODUCTOS
+================================================================================
+
+Archivos modificados: models.py, main.py
+Archivos rediseñados: templates/add_product.html, templates/edit_product.html
+Archivos modificados: templates/product_detail.html, templates/index.html
+
+MODELS.PY:
+- Se agregó link = Column(String, nullable=True) al modelo Product
+- IMPORTANTE: requiere ejecutar en pgAdmin:
+    ALTER TABLE products ADD COLUMN link VARCHAR;
+
+MAIN.PY:
+- add_product ahora acepta image1 (requerida), image2, image3 (opcionales)
+- Los nombres de archivo se guardan como string separado por comas en product.image
+  Ejemplo: "uuid1_foto.jpg,uuid2_foto2.jpg"
+- edit_product reemplaza imágenes por posición si se sube una nueva,
+  conserva la existente si el campo queda vacío
+
+ADD_PRODUCT.HTML / EDIT_PRODUCT.HTML:
+- Rediseño completo con secciones estilizadas
+- 3 slots de imagen con preview en tiempo real (FileReader API)
+- Campo de enlace externo opcional
+- Vista previa de imágenes actuales en el formulario de edición
+
+PRODUCT_DETAIL.HTML:
+- Carrusel de imágenes con flechas prev/next y puntos de navegación
+- JavaScript puro: carouselMove(dir) y carouselGo(n)
+- Botón "🔗 Ver enlace del producto" visible solo si product.link existe
+
+INDEX.HTML:
+- Imagen principal de card usa product.image.split(',')[0].strip()
+  para tomar solo la primera imagen del string comma-separated
+
+
+================================================================================
+BLOQUE 7 — REGISTRO E INICIO DE SESIÓN REDISEÑADOS
+================================================================================
+
+Archivos rediseñados: templates/register.html, templates/login.html
+
+- Card centrada con sombra y acento morado superior
+- Ícono circular con gradiente (✨ registro, 🔑 login)
+- Campos con labels en mayúsculas, bordes redondeados, focus morado
+- En registro: campos username y whatsapp en row de dos columnas
+- Botón con gradiente idéntico al resto de la app
+- Footer con enlace cruzado entre ambas páginas
+
+
+================================================================================
+BLOQUE 8 — MEJORAS DE EXPERIENCIA (UX)
+================================================================================
+
+Archivos modificados/creados: main.py, templates/*, static/js/search.js
+
+1. PÁGINA 404 PERSONALIZADA
+   - Handler: @app.exception_handler(404) en main.py (después de templates init)
+   - Template: templates/404.html con diseño on-brand
+   - Número "404" con gradiente morado, botón de regreso al inicio
+
+2. MODAL DE CONFIRMACIÓN AL ELIMINAR PRODUCTO
+   - En product_detail.html: overlay con animación de entrada
+   - El botón "Eliminar" abre el modal, no envía el form directamente
+   - Modal muestra nombre del producto y requiere confirmar o cancelar
+
+3. PAGINACIÓN + BÚSQUEDA SERVER-SIDE
+   - read_products ahora acepta query params: q (búsqueda) y page (página)
+   - PAGE_SIZE = 12 productos por página definido como constante en main.py
+   - Búsqueda filtra por name ILIKE y description ILIKE en PostgreSQL
+   - Ordenamiento por rating_count se hace en Python después de paginar
+   - search.js reemplazado por debounce inline (400ms) que navega a /?q=término
+   - Controles de paginación: flechas prev/next + números de página
+
+4. FEEDBACK DE ÉXITO AL EDITAR PRODUCTO
+   - edit_product redirige a /product/{id}?msg=saved
+   - product_detail GET acepta parámetro msg: str = ""
+   - Banner verde visible solo cuando msg == "saved"
+
+5. VISTA "MIS PRODUCTOS"
+   - Ruta: GET /my_products?page=N
+   - Template: templates/my_products.html (mismas cards, sin badge de autor)
+   - Breadcrumb: Inicio › Mi Perfil › Mis Productos
+   - Contador de productos en el header
+   - Estado vacío con CTA para publicar primer producto
+   - Link "📦 Ver mis productos" en sidebar de edit_profile.html
+
+6. ESTADO VACÍO EN LISTA DE PRODUCTOS
+   - Si no hay productos: icono 🛍️ + mensaje + CTA contextual
+   - Si búsqueda sin resultados: mensaje + link para limpiar búsqueda
+   - Si usuario logueado: CTA a /add_product
+   - Si no logueado: CTA a /register
+
+7. PÁGINA DE INFORMACIÓN DEL VENDEDOR REDISEÑADA
+   - Layout dos columnas: tarjeta vendedor (sticky) + grid de sus productos
+   - Avatar con inicial del usuario en círculo degradado
+   - Contador de productos publicados
+   - Botón WhatsApp con limpieza del número:
+       clean_phone = numero | replace(' ','') | replace('-','') | etc.
+   - Botón de correo como mailto (sin exponer el texto del email)
+   - Grid de productos del vendedor con las mismas cards de la app
+   - Estado vacío si el vendedor no tiene productos
+
+
+================================================================================
+NOTAS TÉCNICAS IMPORTANTES
+================================================================================
+
+SESIONES:
+  Las sesiones se almacenan en un dict en memoria (sessions = {}). Al reiniciar
+  el servidor todos los usuarios quedan deslogueados. Esto es intencional para
+  el alcance del proyecto (demo). Para producción se requeriría JWT o sesiones
+  en DB.
+
+IMÁGENES:
+  Se guardan en static/images/ con nombre uuid4_original.ext
+  El campo product.image puede contener 1 o 3 nombres separados por coma.
+  Al eliminar un producto se eliminan sus archivos de imagen del filesystem.
+  Al eliminar una cuenta, las imágenes de sus productos NO se eliminan
+  del filesystem (solo de la DB). Para producción convendría limpiarlas.
+
+MIGRACIONES:
+  Este proyecto no usa Alembic. Los cambios de esquema requieren ALTER TABLE
+  manual en pgAdmin. Columna agregada durante esta sesión:
+    ALTER TABLE products ADD COLUMN link VARCHAR;
+
+PALETA DE COLORES (variables CSS en styles.css):
+  --color-purple-dark:   #4C2A6B  (headers, fondos oscuros)
+  --color-purple-main:   #7C3AED  (botones, links, acentos principales)
+  --color-purple-light:  #A78BFA  (hover, estados activos)
+  --color-purple-soft:   #EDE9FE  (fondos suaves, badges)
+  --color-purple-accent: #C4B5FD  (bordes, separadores)
+  --color-orange:        #F97316  (peligro, CTAs de alerta)
+  --color-cyan:          #06B6D4  (info, éxito)
+
+================================================================================
+BLOQUE 9 — SISTEMA DE RATING 1-5 ESTRELLAS
+================================================================================
+
+Archivos modificados: models.py, routers/products.py, routers/users.py,
+                      routers/ratings.py, templates/product_detail.html,
+                      templates/index.html, templates/my_products.html,
+                      templates/user_detail.html
+
+MODELS.PY:
+- Se añadió columna score = Column(Integer, nullable=False, default=5) al modelo Rating
+- Se añadió CheckConstraint('score >= 1 AND score <= 5') para validar en DB
+- IMPORTANTE: requiere ejecutar en pgAdmin:
+    ALTER TABLE ratings ADD COLUMN score INTEGER NOT NULL DEFAULT 3;
+
+PRODUCT_DETAIL.HTML:
+- Selector de estrellas CSS puro: radio inputs en row-reverse + sibling selector
+  El truco: input:checked ~ label activa todas las estrellas anteriores
+- Muestra promedio actual con estrellas filled/empty según avg_rating
+- Muestra calificación propia del usuario si ya votó
+
+CARDS (index, my_products, user_detail):
+- Cada card muestra estrellas ★/☆ según avg_rating del producto
+- Promedio calculado en Python: round(sum(r.score)/len(ratings), 1)
+- Ordenamiento por (avg_rating, rating_count) descendente
+
+
+================================================================================
+BLOQUE 10 — PRINCIPIO DE RESPONSABILIDAD ÚNICA (SRP)
+================================================================================
+
+Archivos creados: dependencies.py, routers/__init__.py,
+                  routers/auth.py, routers/products.py,
+                  routers/users.py, routers/ratings.py
+Archivos modificados: main.py (reducido a ~25 líneas)
+
+DEPENDENCIES.PY — Estado compartido centralizado:
+- templates, pwd_context, sessions = {}, PAGE_SIZE = 12
+- get_db(): generador de sesión SQLAlchemy por request
+- get_current_user(): lee cookie session_token → devuelve User o None
+- build_ratings_list(products): devuelve [(product, count, avg)] ordenado
+- paginate(items, page): devuelve {items, page, total_pages, total}
+
+ROUTERS/:
+- auth.py:     GET/POST /register, GET/POST /login, GET /logout
+- products.py: GET / (index), GET/POST /add_product, GET /product/{id},
+               GET/POST /edit_product/{id}, POST /delete_product/{id}
+- users.py:    GET /user/{id}, GET /my_products, GET/POST /edit_profile,
+               POST /delete_account
+- ratings.py:  POST /rate_product/{id}
+
+MAIN.PY ahora solo:
+- Crea tablas, monta static, registra filtro price, handler 404/500,
+  incluye los 4 routers
+
+
+================================================================================
+BLOQUE 11 — SEPARACIÓN DE ESTILOS (CSS SEPARATION OF CONCERNS)
+================================================================================
+
+Archivos creados en static/css/:
+  auth.css         — register.html y login.html (compartido)
+  product_detail.css — carrusel, pd-wrapper, star selector, modal
+  index.css        — pagination, empty-state, search-info
+  my_products.css  — pagination, empty-state, mp-header
+  edit_profile.css — ep-sidebar, ep-section, ep-danger-zone
+  forms.css        — add_product.html y edit_product.html (ap-* clases)
+  notfound.css     — 404 y 500 (compartido)
+  user_detail.css  — ud-seller-card, ud-email-block, pagination
+
+Archivos modificados: base.html (añadido {% block styles %}{% endblock %})
+Todos los templates: removidos bloques <style> inline, añadido
+  {% block styles %}<link rel="stylesheet" href="/static/css/X.css">{% endblock %}
+
+NOTA: Al extraer el CSS de forms.css se detectó un bug:
+  .ap-img-preview tenía display:none (heredado de add_product) lo cual
+  ocultaba las imágenes actuales en edit_product. Fix: display:none
+  removido del CSS y aplicado inline solo en add_product.
+
+
+================================================================================
+BLOQUE 12 — LIMPIEZA, SEGURIDAD Y BUENAS PRÁCTICAS
+================================================================================
+
+Archivos eliminados: mi_tienda.db (SQLite huérfano), schemas.py (Pydantic sin uso)
+
+CREDENCIALES EN .ENV:
+- Creado .env con DATABASE_URL (ya estaba en .gitignore)
+- Creado .env.example con valores ficticios para documentar variables necesarias
+- database.py ahora usa python-dotenv: load_dotenv() + os.getenv("DATABASE_URL")
+- Añadido python-dotenv a requirements.txt
+
+HELPERS DRY (dependencies.py):
+- build_ratings_list(): extrae lógica duplicada en 3 rutas → 1 función
+- paginate(): extrae lógica duplicada en 2 rutas → 1 función
+
+SEGURIDAD — FILENAMES:
+- Antes: f"{uuid.uuid4()}_{img.filename}" → nombre original podía tener
+  comas (rompía el split), espacios, o path traversal
+- Ahora: ext = os.path.splitext(img.filename)[1].lower()
+         filename = f"{uuid.uuid4()}{ext}"  ← solo UUID + extensión
+
+SEGURIDAD — VALIDACIÓN DE TIPO DE ARCHIVO:
+- Función is_valid_image(file) lee los primeros 12 bytes (magic bytes)
+- Firmas aceptadas: JPEG (ff d8 ff), PNG (89 PNG), GIF, WebP (RIFF), BMP
+- Aplicada antes de guardar en add_product y edit_product
+- Error mostrado al usuario si el archivo no es imagen válida
+
+SEGURIDAD — CONTRASEÑAS:
+- Validación mínimo 6 caracteres en registro (antes sin límite)
+
+CONSISTENCIA — WHATSAPP:
+- En auth.py: whatsapp: str = Form("") → ahora opcional (era Form(...) requerido)
+  Alineado con models.py donde whatsapp = Column(String, nullable=True)
+
+RENDIMIENTO — N+1 QUERIES:
+- Antes: por cada producto listado SQLAlchemy hacía query separada para ratings
+  (12 productos = 13 queries)
+- Ahora: joinedload(models.Product.ratings) carga todo en 1 sola query
+- Aplicado en: read_products, user_detail, my_products
+
+PAGINACIÓN — /user/{id}:
+- Antes: mostraba todos los productos del vendedor sin límite
+- Ahora: acepta ?page=N, usa PAGE_SIZE = 12, muestra controles de paginación
+- Estilos de pagination/.page-btn añadidos a user_detail.css
+
+HANDLER 500:
+- Añadido @app.exception_handler(500) en main.py
+- Creado templates/500.html (reutiliza notfound.css)
+
+IMÁGENES (nota actualizada):
+- Los nombres de archivo ya no incluyen el nombre original del usuario
+- Solo UUID + extensión: evita comas en filenames que rompían el split
+
+
+================================================================================
+  Generado con Claude Sonnet 4.6 — Anthropic
+================================================================================

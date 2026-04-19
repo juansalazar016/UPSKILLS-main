@@ -1,204 +1,8 @@
 {% extends "base.html" %}
 
+{% block styles %}<link rel="stylesheet" href="/static/css/user_detail.css">{% endblock %}
+
 {% block content %}
-<style>
-    .ud-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        color: var(--color-text-muted);
-        margin-bottom: 28px;
-    }
-    .ud-breadcrumb a {
-        color: var(--color-purple-main);
-        text-decoration: none;
-        font-weight: 500;
-    }
-    .ud-breadcrumb a:hover { color: var(--color-purple-dark); }
-    .ud-breadcrumb span { color: var(--color-purple-accent); }
-
-    .ud-wrapper {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 40px;
-        align-items: start;
-        padding-bottom: 48px;
-    }
-
-    /* Tarjeta del vendedor */
-    .ud-seller-card {
-        position: sticky;
-        top: 90px;
-        background: var(--color-white);
-        border: 1px solid var(--color-border);
-        border-top: 4px solid var(--color-purple-main);
-        border-radius: 20px;
-        padding: 32px 24px;
-        box-shadow: var(--shadow-soft);
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 14px;
-    }
-
-    .ud-avatar {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--color-purple-main), var(--color-purple-dark));
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 34px;
-        font-weight: 700;
-        color: white;
-        letter-spacing: 0;
-    }
-
-    .ud-username {
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--color-purple-dark);
-    }
-
-    .ud-divider {
-        width: 100%;
-        height: 1px;
-        background: var(--color-purple-soft);
-        border: none;
-        margin: 2px 0;
-    }
-
-    .ud-stat {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-    .ud-stat-value {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--color-purple-main);
-    }
-    .ud-stat-label {
-        font-size: 12px;
-        color: var(--color-text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        font-weight: 600;
-    }
-
-    /* Botones de contacto */
-    .ud-contact-title {
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--color-text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
-        align-self: flex-start;
-    }
-
-    .ud-contact-btns {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-    }
-
-    .ud-btn-whatsapp {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 700;
-        text-decoration: none;
-        background: #dcfce7;
-        color: #166534;
-        border: 1px solid #86efac;
-        transition: all var(--transition);
-        box-sizing: border-box;
-    }
-    .ud-btn-whatsapp:hover { background: #bbf7d0; transform: translateY(-1px); }
-
-    .ud-btn-email {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 12px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 700;
-        text-decoration: none;
-        background: var(--color-purple-soft);
-        color: var(--color-purple-main);
-        border: 1px solid var(--color-purple-accent);
-        transition: all var(--transition);
-        box-sizing: border-box;
-    }
-    .ud-btn-email:hover { background: #ddd6fe; transform: translateY(-1px); }
-
-    .ud-no-contact {
-        font-size: 13px;
-        color: var(--color-text-muted);
-        font-style: italic;
-    }
-
-    /* Panel de productos */
-    .ud-products-panel {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .ud-products-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .ud-products-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--color-purple-dark);
-    }
-
-    .ud-products-count {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--color-purple-main);
-        background: var(--color-purple-soft);
-        padding: 5px 14px;
-        border-radius: 50px;
-    }
-
-    /* Estado vacío */
-    .ud-empty {
-        text-align: center;
-        padding: 48px 20px;
-        color: var(--color-text-muted);
-        background: var(--color-white);
-        border: 1px solid var(--color-border);
-        border-radius: 16px;
-    }
-    .ud-empty-icon { font-size: 40px; margin-bottom: 12px; }
-    .ud-empty-text { font-size: 15px; }
-
-    /* Responsivo */
-    @media (max-width: 900px) {
-        .ud-wrapper { grid-template-columns: 1fr; gap: 28px; }
-        .ud-seller-card { position: static; }
-    }
-</style>
-
 <div class="container">
     <nav class="ud-breadcrumb">
         <a href="/">Inicio</a>
@@ -231,9 +35,11 @@
                 </a>
                 {% endif %}
 
-                <a href="mailto:{{ user.email }}" class="ud-btn-email">
-                    ✉️ Enviar correo
-                </a>
+                <div class="ud-email-block">
+                    <span class="ud-email-icon">✉️</span>
+                    <span class="ud-email-text" id="ud-email-val">{{ user.email }}</span>
+                    <button class="ud-copy-btn" onclick="udCopyEmail()" title="Copiar correo">⧉</button>
+                </div>
 
                 {% if not user.whatsapp %}
                 <p class="ud-no-contact">Solo disponible por correo electrónico.</p>
@@ -245,12 +51,12 @@
         <div class="ud-products-panel">
             <div class="ud-products-header">
                 <span class="ud-products-title">Productos de {{ user.username }}</span>
-                <span class="ud-products-count">{{ user.products | length }} producto{{ 's' if user.products | length != 1 }}</span>
+                <span class="ud-products-count">{{ total }} producto{{ 's' if total != 1 }}</span>
             </div>
 
             {% if products_with_ratings %}
             <div class="product-grid">
-                {% for product, rating_count in products_with_ratings %}
+                {% for product, rating_count, avg_rating in products_with_ratings %}
                 <a href="/product/{{ product.id }}" class="product-card">
                     <div class="pc-image-frame">
                         <img src="/static/images/{{ product.image.split(',')[0].strip() }}" alt="{{ product.name }}">
@@ -268,11 +74,31 @@
                                 <span class="pc-badge pc-badge-out">✗ Sin stock</span>
                             {% endif %}
                         </div>
-                        <div class="pc-rating">💖 {{ rating_count }} puntuaciones</div>
+                        <div class="pc-rating">
+                            {% if rating_count > 0 %}
+                                <span style="color:#f59e0b;letter-spacing:1px;">
+                                    {% for i in range(1,6) %}{{ '★' if avg_rating >= i else '☆' }}{% endfor %}
+                                </span>
+                                <span style="font-weight:700;color:var(--color-purple-dark);">{{ avg_rating }}</span>
+                                <span style="color:var(--color-text-muted);font-size:12px;">({{ rating_count }})</span>
+                            {% else %}
+                                <span style="color:var(--color-text-muted);font-size:13px;">Sin calificaciones aún</span>
+                            {% endif %}
+                        </div>
                     </div>
                 </a>
                 {% endfor %}
             </div>
+            {% if total_pages > 1 %}
+            <div class="pagination">
+                <a href="/user/{{ user.id }}?page={{ page - 1 }}" class="page-btn {% if page == 1 %}disabled{% endif %}">&#8249;</a>
+                {% for p in range(1, total_pages + 1) %}
+                    <a href="/user/{{ user.id }}?page={{ p }}" class="page-btn {% if p == page %}active{% endif %}">{{ p }}</a>
+                {% endfor %}
+                <a href="/user/{{ user.id }}?page={{ page + 1 }}" class="page-btn {% if page == total_pages %}disabled{% endif %}">&#8250;</a>
+            </div>
+            {% endif %}
+
             {% else %}
             <div class="ud-empty">
                 <div class="ud-empty-icon">📦</div>
@@ -283,4 +109,15 @@
 
     </div>
 </div>
+
+<script>
+function udCopyEmail() {
+    const email = document.getElementById('ud-email-val').textContent;
+    navigator.clipboard.writeText(email).then(() => {
+        const btn = document.querySelector('.ud-copy-btn');
+        btn.textContent = '✓';
+        setTimeout(() => btn.textContent = '⧉', 1800);
+    });
+}
+</script>
 {% endblock %}

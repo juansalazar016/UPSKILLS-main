@@ -4,7 +4,7 @@
 # Las relaciones usan cascade="all, delete-orphan" para que al eliminar
 # un usuario se borren en cadena sus productos y todas las valoraciones.
 
-from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey, UniqueConstraint, CheckConstraint
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -53,9 +53,12 @@ class Rating(Base):
     id         = Column(Integer, primary_key=True, index=True)
     user_id    = Column(Integer, ForeignKey("users.id"),    nullable=False)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    score      = Column(Integer, nullable=False, default=5)
 
     user    = relationship("User",    back_populates="ratings")
     product = relationship("Product", back_populates="ratings")
 
-    # Garantiza que un usuario no pueda valorar el mismo producto dos veces
-    __table_args__ = (UniqueConstraint('user_id', 'product_id', name='_user_product_uc'),)
+    __table_args__ = (
+        UniqueConstraint('user_id', 'product_id', name='_user_product_uc'),
+        CheckConstraint('score >= 1 AND score <= 5', name='_score_range'),
+    )
