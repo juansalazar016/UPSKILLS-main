@@ -1,0 +1,591 @@
+/* =========================================
+   VARIABLES DE COLOR - PALETA MORADA
+   ========================================= */
+:root {
+    /* Morados principales */
+    --color-purple-dark:    #4C2A6B; /* Headers, fondos oscuros */
+    --color-purple-main:    #7C3AED; /* Botones, links */
+    --color-purple-light:   #A78BFA; /* Hover, acentos */
+    --color-purple-soft:    #EDE9FE; /* Fondos suaves */
+    --color-purple-accent:  #C4B5FD; /* Bordes, líneas */
+
+    /* Complementarios */
+    --color-text-dark:      #1F2937; /* Texto principal */
+    --color-text-muted:     #6B7280; /* Texto secundario */
+    --color-white:          #FFFFFF; /* Fondo claro */
+    --color-orange:         #F97316; /* CTAs, alertas, peligro */
+    --color-cyan:           #06B6D4; /* Info, destacados, éxito */
+
+    /* Utilidades */
+    --color-border:         #C4B5FD;
+    --color-bg-body:        #EDE9FE;
+    --shadow-soft:          0 2px 10px rgba(124, 58, 237, 0.08);
+    --shadow-hover:         0 5px 15px rgba(124, 58, 237, 0.18);
+    --radius:               8px;
+    --transition:           0.3s ease;
+}
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos del cuerpo */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-bg-body);
+    color: var(--color-text-dark);
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* =========================================
+   ENCABEZADO
+   ========================================= */
+header {
+    background-color: var(--color-purple-dark);
+    padding: 12px 28px;
+    color: var(--color-white);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(76, 42, 107, 0.4);
+}
+
+/* Lado izquierdo: logo + bienvenido */
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+header h1 a {
+    color: var(--color-white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+/* Separador vertical */
+.header-divider {
+    display: inline-block;
+    width: 1px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.25);
+    margin: 0 16px;
+}
+
+/* Texto de bienvenida */
+.header-greeting {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-purple-accent);
+    letter-spacing: 0.01em;
+}
+
+/* Nav derecha */
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Botones del nav */
+.nav-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-white);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    transition: background var(--transition), border-color var(--transition), transform var(--transition);
+}
+
+.nav-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.nav-btn-outline {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--color-purple-accent);
+}
+
+.nav-btn-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-white);
+}
+
+/* =========================================
+   CONTENIDO PRINCIPAL
+   ========================================= */
+main {
+    padding: 20px 0;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    text-align: center;
+    color: var(--color-purple-dark);
+}
+
+/* =========================================
+   FORMULARIOS
+   ========================================= */
+form {
+    background-color: var(--color-white);
+    padding: 30px;
+    border-radius: var(--radius);
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-soft);
+    border-top: 4px solid var(--color-purple-main);
+}
+
+form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--color-purple-dark);
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"],
+form textarea,
+form input[type="file"] {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 20px;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: var(--color-white);
+    color: var(--color-text-dark);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form input[type="password"]:focus,
+form input[type="number"]:focus,
+form textarea:focus {
+    border-color: var(--color-purple-main);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+form input[type="submit"],
+form button {
+    width: 100%;
+    background-color: var(--color-purple-main);
+    color: var(--color-white);
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    transition: background-color var(--transition), transform var(--transition);
+}
+
+form input[type="submit"]:hover,
+form button:hover {
+    background-color: var(--color-purple-dark);
+    transform: translateY(-1px);
+}
+
+/* =========================================
+   BOTONES
+   ========================================= */
+.button {
+    display: inline-block;
+    background-color: var(--color-purple-main);
+    color: var(--color-white);
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color var(--transition), transform var(--transition);
+}
+
+.button:hover {
+    background-color: var(--color-purple-dark);
+    transform: translateY(-1px);
+}
+
+/* Botón de acción destacada (CTA) */
+.button-cta {
+    background-color: var(--color-orange);
+}
+
+.button-cta:hover {
+    background-color: #ea6600;
+}
+
+/* Botón peligro / eliminar */
+.button-danger {
+    background-color: var(--color-orange);
+}
+
+.button-danger:hover {
+    background-color: #dc5a00;
+}
+
+/* Botón info */
+.button-info {
+    background-color: var(--color-cyan);
+}
+
+.button-info:hover {
+    background-color: #0596af;
+}
+
+/* Botón secundario / outline */
+.button-outline {
+    background-color: transparent;
+    color: var(--color-purple-main);
+    border: 2px solid var(--color-purple-main);
+}
+
+.button-outline:hover {
+    background-color: var(--color-purple-soft);
+    color: var(--color-purple-dark);
+}
+
+.button-group {
+    margin-top: 20px;
+}
+
+.button-group .button {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* =========================================
+   MENSAJES
+   ========================================= */
+.message {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: var(--radius);
+    text-align: center;
+    font-weight: 500;
+}
+
+.message.error {
+    background-color: var(--color-orange);
+    color: var(--color-white);
+}
+
+.message.success {
+    background-color: var(--color-cyan);
+    color: var(--color-white);
+}
+
+.message.info {
+    background-color: var(--color-purple-soft);
+    color: var(--color-purple-dark);
+    border: 1px solid var(--color-purple-accent);
+}
+
+/* =========================================
+   BÚSQUEDA
+   ========================================= */
+#search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 20px;
+    margin: 20px auto;
+    display: block;
+    border: 1px solid var(--color-border);
+    border-radius: 50px;
+    font-size: 16px;
+    color: var(--color-text-dark);
+    background-color: var(--color-white);
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: var(--color-purple-main);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+/* =========================================
+   GRID DE PRODUCTOS
+   ========================================= */
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* =========================================
+   TARJETAS DE PRODUCTOS
+   ========================================= */
+.product-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-purple-accent);
+    border-top: 4px solid var(--color-purple-main);
+    border-radius: 16px;
+    overflow: hidden;
+    width: calc(25% - 20px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card h3,
+.product-card .pc-price,
+.product-card .pc-badge,
+.product-card .pc-rating {
+    text-decoration: none;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--color-purple-light);
+    border-top-color: var(--color-purple-main);
+}
+
+/* Marco de imagen */
+.pc-image-frame {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+}
+
+.pc-image-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .pc-image-frame img {
+    transform: scale(1.06);
+}
+
+/* Overlay al hacer hover */
+.pc-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(76, 42, 107, 0.72) 0%, transparent 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 14px 16px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.product-card:hover .pc-image-overlay {
+    opacity: 1;
+}
+
+.pc-view-btn {
+    color: var(--color-white);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 2px solid rgba(255,255,255,0.5);
+    padding-bottom: 2px;
+}
+
+/* Contenido de la card */
+.product-card-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.product-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--color-purple-dark);
+    margin: 0;
+    line-height: 1.3;
+}
+
+/* Precio */
+.pc-price {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-purple-main);
+    line-height: 1;
+}
+
+/* Badges */
+.pc-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pc-badge-stock {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.pc-badge-out {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.pc-badge-author {
+    background: var(--color-purple-soft);
+    color: var(--color-purple-dark);
+}
+
+/* Rating */
+.pc-rating {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    font-weight: 500;
+    border-top: 1px solid var(--color-purple-soft);
+    padding-top: 10px;
+    margin-top: auto;
+}
+
+/* =========================================
+   DETALLE DE PRODUCTO
+   ========================================= */
+.product-detail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.product-detail img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: var(--radius);
+    object-fit: cover;
+    border: 2px solid var(--color-purple-accent);
+}
+
+.product-detail-content {
+    flex: 1;
+}
+
+.product-detail-content h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-align: left;
+    color: var(--color-purple-dark);
+}
+
+.product-detail-content p {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: var(--color-text-muted);
+}
+
+/* =========================================
+   RESPONSIVIDAD
+   ========================================= */
+@media (max-width: 1200px) {
+    .product-card {
+        width: calc(33.333% - 20px);
+    }
+}
+
+@media (max-width: 992px) {
+    .product-card {
+        width: calc(50% - 20px);
+    }
+
+    .product-detail {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .product-detail img {
+        max-width: 100%;
+    }
+
+    .product-detail-content {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    #search-input {
+        max-width: 100%;
+    }
+
+    header {
+        flex-direction: column;
+        text-align: center;
+        padding: 12px 20px;
+        gap: 12px;
+    }
+
+    .header-left {
+        justify-content: center;
+    }
+
+    header nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .product-card {
+        width: 100%;
+    }
+
+    form {
+        padding: 20px;
+    }
+}

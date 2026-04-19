@@ -1,0 +1,354 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .ap-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: var(--color-text-muted);
+        margin-bottom: 28px;
+    }
+    .ap-breadcrumb a {
+        color: var(--color-purple-main);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color var(--transition);
+    }
+    .ap-breadcrumb a:hover { color: var(--color-purple-dark); }
+    .ap-breadcrumb span { color: var(--color-purple-accent); }
+
+    .ap-wrapper {
+        max-width: 720px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        padding-bottom: 48px;
+    }
+
+    .ap-section {
+        background: var(--color-white);
+        border: 1px solid var(--color-border);
+        border-radius: 16px;
+        padding: 28px 32px;
+        box-shadow: var(--shadow-soft);
+    }
+
+    .ap-section-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-purple-dark);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .ap-divider {
+        height: 1px;
+        background: linear-gradient(to right, var(--color-purple-accent), transparent);
+        border: none;
+        margin-bottom: 22px;
+    }
+
+    .ap-field {
+        margin-bottom: 20px;
+    }
+
+    .ap-field:last-child { margin-bottom: 0; }
+
+    .ap-field label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-purple-dark);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .ap-field .ap-hint {
+        font-size: 12px;
+        color: var(--color-text-muted);
+        margin-top: 5px;
+    }
+
+    .ap-field input[type="text"],
+    .ap-field input[type="number"],
+    .ap-field input[type="url"],
+    .ap-field textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        font-size: 15px;
+        color: var(--color-text-dark);
+        background: var(--color-white);
+        font-family: inherit;
+        transition: border-color var(--transition), box-shadow var(--transition);
+        box-sizing: border-box;
+    }
+
+    .ap-field textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .ap-field input:focus,
+    .ap-field textarea:focus {
+        outline: none;
+        border-color: var(--color-purple-main);
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+    }
+
+    .ap-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    /* Imágenes */
+    .ap-images-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .ap-img-slot {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .ap-img-slot label {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-purple-dark);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .ap-img-upload {
+        border: 2px dashed var(--color-purple-accent);
+        border-radius: 12px;
+        padding: 20px 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color var(--transition), background var(--transition);
+        background: var(--color-purple-soft);
+        position: relative;
+    }
+
+    .ap-img-upload:hover {
+        border-color: var(--color-purple-main);
+        background: #e5deff;
+    }
+
+    .ap-img-upload input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+    }
+
+    .ap-img-upload-icon { font-size: 28px; margin-bottom: 6px; }
+    .ap-img-upload-text { font-size: 12px; color: var(--color-text-muted); font-weight: 500; }
+
+    .ap-img-preview {
+        width: 100%;
+        aspect-ratio: 4/3;
+        object-fit: cover;
+        border-radius: 10px;
+        display: none;
+        border: 1px solid var(--color-border);
+    }
+
+    .ap-img-badge-opt {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 50px;
+        background: var(--color-purple-soft);
+        color: var(--color-purple-main);
+        letter-spacing: 0.04em;
+    }
+
+    .ap-img-badge-req {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 50px;
+        background: #d1fae5;
+        color: #065f46;
+        letter-spacing: 0.04em;
+    }
+
+    /* Botón submit */
+    .ap-submit-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--color-purple-main), var(--color-purple-dark));
+        color: var(--color-white);
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform var(--transition), box-shadow var(--transition);
+        box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        font-family: inherit;
+    }
+
+    .ap-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+    }
+
+    .ap-msg {
+        padding: 14px 20px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 15px;
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+        .ap-row { grid-template-columns: 1fr; }
+        .ap-images-grid { grid-template-columns: 1fr; }
+        .ap-section { padding: 20px 16px; }
+    }
+</style>
+
+<div class="container">
+    <nav class="ap-breadcrumb">
+        <a href="/">Inicio</a>
+        <span>›</span>
+        <span>Agregar Producto</span>
+    </nav>
+
+    {% if msg %}
+    <div class="ap-msg">❌ {{ msg }}</div>
+    {% endif %}
+
+    <form class="ap-wrapper" action="/add_product" method="post" enctype="multipart/form-data">
+
+        <!-- Información básica -->
+        <div class="ap-section">
+            <div class="ap-section-title">📦 Información del producto</div>
+            <hr class="ap-divider">
+
+            <div class="ap-field">
+                <label>Nombre del producto</label>
+                <input type="text" name="name" placeholder="Ej: Balón de baloncesto firmado" required>
+            </div>
+
+            <div class="ap-field">
+                <label>Descripción</label>
+                <textarea name="description" placeholder="Describe tu producto..." required></textarea>
+            </div>
+
+            <div class="ap-row">
+                <div class="ap-field">
+                    <label>Precio (COP)</label>
+                    <input type="number" step="0.01" name="price" placeholder="0" required>
+                </div>
+                <div class="ap-field">
+                    <label>Stock</label>
+                    <input type="number" name="stock" placeholder="0" required>
+                </div>
+            </div>
+
+            <div class="ap-field">
+                <label>Enlace externo <span style="font-weight:400; text-transform:none; color:var(--color-text-muted);">(opcional)</span></label>
+                <input type="url" name="link" placeholder="https://...">
+                <p class="ap-hint">Puede ser un enlace a la tienda, red social o más información del producto.</p>
+            </div>
+        </div>
+
+        <!-- Imágenes -->
+        <div class="ap-section">
+            <div class="ap-section-title">🖼️ Imágenes del producto <span style="font-weight:400; color:var(--color-text-muted); text-transform:none; letter-spacing:0;">(máx. 3)</span></div>
+            <hr class="ap-divider">
+
+            <div class="ap-images-grid">
+                <!-- Imagen 1 -->
+                <div class="ap-img-slot">
+                    <label>Imagen 1 <span class="ap-img-badge-req">Principal</span></label>
+                    <div class="ap-img-upload" id="slot1">
+                        <input type="file" name="image1" accept="image/*" required onchange="previewImg(this,'prev1','slot1')">
+                        <div id="slot1-placeholder">
+                            <div class="ap-img-upload-icon">📷</div>
+                            <div class="ap-img-upload-text">Clic para subir</div>
+                        </div>
+                        <img id="prev1" class="ap-img-preview" src="" alt="preview">
+                    </div>
+                </div>
+
+                <!-- Imagen 2 -->
+                <div class="ap-img-slot">
+                    <label>Imagen 2 <span class="ap-img-badge-opt">Opcional</span></label>
+                    <div class="ap-img-upload" id="slot2">
+                        <input type="file" name="image2" accept="image/*" onchange="previewImg(this,'prev2','slot2')">
+                        <div id="slot2-placeholder">
+                            <div class="ap-img-upload-icon">📷</div>
+                            <div class="ap-img-upload-text">Clic para subir</div>
+                        </div>
+                        <img id="prev2" class="ap-img-preview" src="" alt="preview">
+                    </div>
+                </div>
+
+                <!-- Imagen 3 -->
+                <div class="ap-img-slot">
+                    <label>Imagen 3 <span class="ap-img-badge-opt">Opcional</span></label>
+                    <div class="ap-img-upload" id="slot3">
+                        <input type="file" name="image3" accept="image/*" onchange="previewImg(this,'prev3','slot3')">
+                        <div id="slot3-placeholder">
+                            <div class="ap-img-upload-icon">📷</div>
+                            <div class="ap-img-upload-text">Clic para subir</div>
+                        </div>
+                        <img id="prev3" class="ap-img-preview" src="" alt="preview">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="ap-submit-btn">📦 Publicar Producto</button>
+
+    </form>
+</div>
+
+<script>
+function previewImg(input, previewId, slotId) {
+    const file = input.files[0];
+    const preview = document.getElementById(previewId);
+    const placeholder = document.getElementById(slotId + '-placeholder');
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+</script>
+{% endblock %}

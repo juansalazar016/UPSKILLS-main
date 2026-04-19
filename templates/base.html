@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>UPSKILLS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Enlace a los estilos CSS -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Fuente de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1>
+                <a href="/">
+                    <span>UPSKILLS</span>
+                </a>
+            </h1>
+            {% if current_user %}
+            <div class="header-welcome">
+                <span class="header-divider"></span>
+                <span class="header-greeting">👋 {{ current_user.username }}</span>
+            </div>
+            {% endif %}
+        </div>
+        <nav>
+            {% if current_user %}
+                <a href="/add_product" class="nav-btn">＋ Agregar</a>
+                <a href="/edit_profile" class="nav-btn">👤 Perfil</a>
+                <a href="/logout" class="nav-btn nav-btn-outline">Salir</a>
+            {% else %}
+                <a href="/login" class="nav-btn">Iniciar Sesión</a>
+                <a href="/register" class="nav-btn nav-btn-outline">Registrarse</a>
+            {% endif %}
+        </nav>
+    </header>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <!-- Enlace al script de búsqueda -->
+    <script src="/static/js/search.js"></script>
+</body>
+</html>

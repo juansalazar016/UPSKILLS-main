@@ -1,0 +1,17 @@
+# Ignorar archivos de base de datos SQLite
+*.db
+
+# Ignorar archivos compilados de Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignorar archivos de configuración de entornos virtuales o dependencias
+venv/
+.env
+
+# Ignorar archivos de logs
+*.log
+
+# Ignorar carpeta de imágenes en static
+static/images/

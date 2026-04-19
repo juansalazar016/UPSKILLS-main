@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .auth-wrapper {
+        min-height: calc(100vh - 60px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+    }
+
+    .auth-card {
+        background: var(--color-white);
+        border: 1px solid var(--color-border);
+        border-top: 4px solid var(--color-purple-main);
+        border-radius: 20px;
+        padding: 40px 44px;
+        width: 100%;
+        max-width: 480px;
+        box-shadow: 0 20px 60px rgba(124, 58, 237, 0.12);
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .auth-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--color-purple-main), var(--color-purple-dark));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin: 0 auto 16px;
+    }
+
+    .auth-title {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--color-purple-dark);
+        margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    .auth-divider {
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--color-purple-accent), transparent);
+        border: none;
+        margin-bottom: 28px;
+    }
+
+    .auth-msg {
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fca5a5;
+    }
+
+    .auth-field {
+        margin-bottom: 18px;
+    }
+
+    .auth-field label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--color-purple-dark);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 8px;
+    }
+
+    .auth-field input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--color-border);
+        border-radius: 10px;
+        font-size: 15px;
+        color: var(--color-text-dark);
+        background: var(--color-white);
+        font-family: inherit;
+        transition: border-color var(--transition), box-shadow var(--transition);
+        box-sizing: border-box;
+    }
+
+    .auth-field input:focus {
+        outline: none;
+        border-color: var(--color-purple-main);
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+    }
+
+    .auth-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .auth-submit-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, var(--color-purple-main), var(--color-purple-dark));
+        color: var(--color-white);
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: transform var(--transition), box-shadow var(--transition);
+        box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        margin-top: 8px;
+    }
+
+    .auth-submit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 24px;
+        font-size: 14px;
+        color: var(--color-text-muted);
+    }
+
+    .auth-footer a {
+        color: var(--color-purple-main);
+        font-weight: 600;
+        text-decoration: none;
+        border-bottom: 2px solid var(--color-purple-accent);
+        transition: border-color var(--transition);
+    }
+
+    .auth-footer a:hover { border-color: var(--color-purple-main); }
+
+    @media (max-width: 520px) {
+        .auth-card { padding: 28px 20px; }
+        .auth-row { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon">✨</div>
+            <div class="auth-title">Crear cuenta</div>
+            <div class="auth-subtitle">Únete a UPSKILLS y empieza a vender</div>
+        </div>
+
+        <hr class="auth-divider">
+
+        {% if msg %}
+        <div class="auth-msg">❌ {{ msg }}</div>
+        {% endif %}
+
+        <form action="/register" method="post" style="margin:0; background:none; box-shadow:none; border:none; padding:0; max-width:none;">
+
+            <div class="auth-row">
+                <div class="auth-field">
+                    <label>Usuario</label>
+                    <input type="text" name="username" placeholder="Tu nombre de usuario" required>
+                </div>
+                <div class="auth-field">
+                    <label>WhatsApp</label>
+                    <input type="text" name="whatsapp" placeholder="+57 300 000 0000" required>
+                </div>
+            </div>
+
+            <div class="auth-field">
+                <label>Correo electrónico</label>
+                <input type="email" name="email" placeholder="correo@ejemplo.com" required>
+            </div>
+
+            <div class="auth-field">
+                <label>Contraseña</label>
+                <input type="password" name="password" placeholder="Mínimo 8 caracteres" required>
+            </div>
+
+            <button type="submit" class="auth-submit-btn">✨ Crear mi cuenta</button>
+        </form>
+
+        <div class="auth-footer">
+            ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
